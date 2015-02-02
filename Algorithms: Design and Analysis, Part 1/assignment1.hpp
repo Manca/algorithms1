@@ -93,9 +93,5 @@ namespace assignment1
             return x + y + z;
         }
     }
-}
+} // namespace
 
-void TestCase1()
-{
-    
-}
