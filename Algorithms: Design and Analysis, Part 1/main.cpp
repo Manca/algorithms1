@@ -8,6 +8,8 @@
 // Main program - all our assignments will be executed from here
 
 #include <assert.h>
+#include <fstream>
+
 #include "assignment1.hpp"
 
 
