@@ -8,5 +8,7 @@ range-for loops and many others... will see how it goes tho)
 ## Problems
 1) Count number of inversions in an array. Running time O(nlogn)
 
-2) ...
+2) Compute the total number of comparisons used to sort the given input file by QuickSort.
+
+3) Min-cut ...
 
