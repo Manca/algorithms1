@@ -55,12 +55,10 @@ namespace assignment2 {
         a = b;
         b = tmp;
     }
-
-    // first problem
-    int noCompFirst = 0;
-    int partitionFirst(vector<int>& input, int left, int right)
+    
+    // main partition function
+    int partition(vector<int>& input, int left, int right)
     {
-        noCompFirst += right - left - 1;
         int p = input[left];
         int i = left + 1;
         
@@ -75,6 +73,15 @@ namespace assignment2 {
         swap(input[left], input[i-1]);
         
         return (i-1);
+    }
+
+    // first problem
+    int noCompFirst = 0;
+    int partitionFirst(vector<int>& input, int left, int right)
+    {
+        noCompFirst += right - left - 1;
+        
+        return partition(input, left, right);
     }
     
     // second problem
@@ -86,27 +93,15 @@ namespace assignment2 {
         // swap the last element with the first
         swap(input[right-1], input[left]);
         
-        int p = input[left];
-        int i = left + 1;
-        
-        for (int j = left + 1; j < right; j++)
-        {
-            if (input[j] < p)
-            {
-                swap(input[i], input[j]);
-                i++;
-            }
-        }
-        swap(input[left], input[i-1]);
-        
-        return (i-1);
+        return partition(input, left, right);
     }
     
     // third problem
     int noCompMedian = 0;
     int partitionMedian(vector<int>& input, int left, int right)
     {
-        noCompMedian += (right - left -1);
+        noCompMedian += right - left - 1;
+        
         int midInd = (left + right - 1) / 2;
         // initially pivot position is unknown
         int p = -1;
@@ -134,20 +129,7 @@ namespace assignment2 {
         // bring the median pivot to the beginning
         swap(input[left], input[p]);
         
-        p = input[left];
-        int i = left + 1;
-        
-        for (int j = left + 1; j < right; j++)
-        {
-            if (input[j] < p)
-            {
-                swap(input[j], input[i]);
-                i++;
-            }
-        }
-        swap(input[left], input[i-1]);
-        
-        return (i-1);
+        return partition(input, left, right);
     }
     
     // entry point to the algorithm
@@ -157,7 +139,6 @@ namespace assignment2 {
         if (left == right)
             return;
         
-        // first element is pivot
         int pivotIndex = -1;
         switch (partitionType)
         {
@@ -165,11 +146,6 @@ namespace assignment2 {
             case 2: pivotIndex = partitionLast(input, left, right); break;
             case 3: pivotIndex = partitionMedian(input, left, right); break;
         }
-        /*cout << "Pivot is at pos. " << pivotIndex << " (" << input[pivotIndex] << ")  Subarray: " << endl;
-         for (int i = left; i < right; i++)
-         cout << input[i] << " ";
-         cout << "**********" << endl;
-         */
         QuickSort(input, left, pivotIndex, partitionType);
         QuickSort(input, pivotIndex+1, right, partitionType);
     }
