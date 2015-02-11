@@ -12,6 +12,7 @@
 
 #include "assignment1.hpp"
 #include "assignment2.hpp"
+#include "assignment3.hpp"
 
 
 int main(int argc, const char * argv[]) {
@@ -85,5 +86,8 @@ int main(int argc, const char * argv[]) {
         cout << "File cannot be opened!" << endl;
     }
     
+    /*** Assignment 3 test cases ***/
+    assignment3::Graph graph("kargerMinCut.txt");
+    graph.printGraph();
     
 }
