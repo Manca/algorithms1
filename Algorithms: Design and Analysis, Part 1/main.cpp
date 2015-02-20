@@ -88,6 +88,9 @@ int main(int argc, const char * argv[]) {
     
     /*** Assignment 3 test cases ***/
     assignment3::Graph graph("kargerMinCut.txt");
-    graph.printGraph();
+    for (int i = 0; i < 10; i++)
+    {
+        cout << "MinCut so far: " << graph.mincut() << endl;
+    }
     
 }
