@@ -93,4 +93,9 @@ int main(int argc, const char * argv[]) {
         cout << "MinCut so far: " << graph.mincut() << endl;
     }
     
+    // Min-Cut for this graph is 17, if we don't get exactly 17,
+    // we might need to increase number of iterations above
+    assert(graph.mincut() == 17);
+    
+    
 }
