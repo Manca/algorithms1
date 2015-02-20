@@ -8,7 +8,9 @@ range-for loops and many others... will see how it goes tho)
 ## Problems
 1) Count number of inversions in an array. Running time O(nlogn)
 
-2) Compute the total number of comparisons used to sort the given input file by QuickSort.
+2) Compute the total number of comparisons used to sort the given input file by QuickSort
 
-3) Min-cut ...
+3) Karger's Min-Cut algorithm
+
+4) Strongly Connected Components computation algorithm
 
