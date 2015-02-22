@@ -281,7 +281,7 @@ namespace assignment4 {
         }
     }
     
-    int computeSCC(const string& fileName)
+    void computeSCC(const string& fileName)
     {
         cout << "***** ASSIGNMENT4 MAIN TEST CASE *****" << endl;
         // load from file
@@ -367,7 +367,5 @@ namespace assignment4 {
         assert(SCCs[2].numNodes == 459);
         assert(SCCs[3].numNodes == 313);
         assert(SCCs[4].numNodes == 211);
-               
-        return 0;
     }
 } // namespace
