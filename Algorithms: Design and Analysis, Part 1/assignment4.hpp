@@ -31,6 +31,15 @@
     Thus, if your algorithm computes only 3 SCCs whose sizes are 400, 300, and 100, 
     then your answer should be "400,300,100,0,0".
  ************************/
+//
+// Note:
+//
+// Compile the program with stack size set to at least 16MB.
+// Correct way to set it if using clang compiler:
+//
+// clang++ --std=c++11 -O3 -g -Wl,-stack_size -Wl,0x1000000 -o main ../main.cpp
+//
+///////////////////////////
 
 #include <map>
 #include <vector>
@@ -39,57 +48,101 @@
 
 namespace assignment4 {
     
+    // Let's define some necessary structs and values
     typedef std::map<int, std::vector<int>> Graph;
     typedef std::vector<int> seenList, timesList, leadersList;
-    const int NUM_NODES = 875715; // 875714 + 1 (because we start from 0)
+    typedef struct
+    {
+        int leader;
+        int numNodes;
+    } SCC;
+    const int NUM_NODES = 875715; // 875714 + 1 - total number of nodes in G
     
     // global vars
-    timesList times;
-    seenList seen;
-    leadersList leaders;
-    int time = 0;
-    int s = -1;
+    timesList   _times;
+    seenList    _seen;
+    leadersList _leaders;
+    int _time = 0;
+    int _s = -1; // potential leader
     
     void DFS(Graph& g, int i)
     {
-        if (g.count(i) == 0)
-            return;
+        assert(g.count(i) > 0); // every node MUST be in a graph
         
-        seen[i] = 1;   // mark s as seen
-        leaders[i] = s;
-  //    std::cout << "Exploring " << i << endl;
+        _seen[i] = 1;           // mark s as seen
+        _leaders[i] = _s;
+
         // for every edge (s, v)
         for (int v : g[i])
         {
-            if (!seen[v])   // if v is not yet explored
+            if (!_seen[v])   // if v is not yet explored
             {
                 DFS(g, v);
             }
         }
-        time++;
-        times[i] = time;
+        _time++;
+        _times[i] = _time;
     }
     
-
     void DFSLoop(Graph& g)
     {
-        time = 0;
-        s = -1;
-        seen = seenList(g.size(), 0);   // mark all nodes unexplored
-        int n = g.size();
+        // initally time and leader set to 0 and -1, respectively
+        // seen list i reset too
+        _time = 0;
+        _s = -1;
+        _seen = seenList(g.size()+1, 0);   // mark all nodes unexplored
+        
+        int n = g.size();   // we assume the vertex labeling 1..n here
         
         for (int i = n; i > 0; i--)
         {
-            if (!seen[i]) // if i is not yet explored
+            if (!_seen[i]) // if i is not yet explored
             {
-                s = i;
+                _s = i;
                 DFS(g, i);
             }
         }
     }
     
-    void example1()
+    Graph constructNewGraph(Graph& originalGraph, const timesList& fTimes)
     {
+        Graph newGraph;
+        
+        // First fTimes should have exactly n+1 elements of the originalGraph
+        // assuming vertex labels start from 1 to n.
+        assert(fTimes.size() == originalGraph.size()+1);
+        
+        for (int i = 1; i < fTimes.size(); i++)
+        {
+            // if the vertex in original graph doesn't have outgoing edges
+            if (originalGraph[i].size() == 0)
+            {
+                // just construct it with updated key in a new graph
+                newGraph[fTimes[i]] = std::vector<int>();
+                continue;
+            }
+            
+            for (int neighbor : originalGraph[i])
+            {
+                
+                // neighbors of i-th vertex of original graph are
+                // vertices with new names taken from the finishing times list
+                newGraph[fTimes[i]].push_back(fTimes[neighbor]);
+            }
+        }
+        
+        return newGraph;
+    }
+    
+    // utility comparator function
+    bool compareByNumSCCs(const SCC &a, const SCC &b)
+    {
+        return a.numNodes > b.numNodes;
+    }
+    
+    void testCase1()
+    {
+        cout << "***** ASSIGNMENT4 TEST CASE 1 *****" << endl;
         Graph g;
         g[1] = {4};
         g[2] = {8};
@@ -113,58 +166,59 @@ namespace assignment4 {
         gRev[9] = {6};
         
         // initialize global var
-        seen = seenList(g.size() + 1, 0); // initialize with zeros
-        times = timesList(g.size() + 1, 0); // initialize with zeros
-        leaders = leadersList(g.size() + 1, 0); // init with zeros
+        _seen       = seenList(g.size() + 1, 0);        // initialize with zeros
+        _times      = timesList(g.size() + 1, 0);       // initialize with zeros
+        _leaders    = leadersList(g.size() + 1, 0);     // initialize with zeros
         
-        // First step: Calculate finishing times on transpose Graph
+        // First step: Calculate finishing times on transpose Graph gRev
         DFSLoop(gRev);
         
         // Second step: Construct a new graph (or update original)
         // with vertices updated according to their finishing times
-        Graph newGraph;
-        for (int i = 1; i <= times.size(); i++)
-        {
-            
-            for (int neighbor : g[i])
-            {
-                // neighbors of i-th vertex of original graph are
-                // vertices with new names taken from the finishing times list
-                newGraph[times[i]].push_back(times[neighbor]);
-            }
-
-        }
-        for (auto pair : newGraph)
-        {
-            std::cout << "Vertex " << pair.first << " has: ";
-            for (int i : pair.second)
-                std::cout << i << " ";
-            std::cout << std::endl;
-        }
+        Graph newGraph = constructNewGraph(g, _times);
         
         // Third step: DFS over the new graph (updated original) and compute leaders
         DFSLoop(newGraph);
 
         // Forth step: Sort leaders in order to compute number of nodes in each SCC
-        sort(begin(leaders), end(leaders));
-        int el = leaders[1];
+        sort(begin(_leaders), end(_leaders));
+        std::vector<SCC> SCCs;
+        
+        int el = _leaders[1];
         int elCnt = 1;
-        for (int i = 2; i <= leaders.size(); i++)
+        for (int i = 2; i < _leaders.size(); i++)
         {
-            if (leaders[i] == el)
+            if (_leaders[i] == el)
                 elCnt++;
             else
             {
-                std::cout << "Leader " << el << " has " << elCnt << " nodes." << std::endl;
-                el = leaders[i];
+                SCC scc;
+                scc.leader = el;
+                scc.numNodes = elCnt;
+                SCCs.push_back(scc);
+
+                el = _leaders[i];
                 elCnt = 1;
             }
+        }
+        // last SCC
+        SCC scc;
+        scc.leader = el;
+        scc.numNodes = elCnt;
+        SCCs.push_back(scc);
+        
+        // there are 3 SCCs in the given graph
+        assert(SCCs.size() == 3);
+        for (SCC scc : SCCs)
+        {
+            cout << "SCC with leader " << scc.leader << " has " << scc.numNodes << " nodes." << endl;
         }
         
     }
     
-    void example2()
+    void testCase2()
     {
+        cout << "***** ASSIGNMENT4 TEST CASE 2 *****" << endl;
         Graph g;
         g[1] = {2};
         g[2] = {3, 5, 6};
@@ -186,51 +240,50 @@ namespace assignment4 {
         gRev[8] = {4, 7, 8};
         
         // initialize global var
-        seen = seenList(g.size() + 1, 0); // initialize with zeros
-        times = timesList(g.size() + 1, 0); // initialize with zeros
-        leaders = leadersList(g.size() + 1, 0); // init with zeros
+        _seen       = seenList(g.size() + 1, 0);
+        _times      = timesList(g.size() + 1, 0);
+        _leaders    = leadersList(g.size() + 1, 0);
         
         DFSLoop(gRev);
-        Graph newGraph;
-        for (int i = 1; i<= times.size(); i++)
-        {
-            
-            for (int neighbor : g[i])
-            {
-                newGraph[times[i]].push_back(times[neighbor]);
-            }
-            
-        }
-        for (auto pair : newGraph)
-        {
-            //std::cout << "Vertex " << pair.first << " has: ";
-            for (int i : pair.second)
-                std::cout << i << " ";
-            std::cout << std::endl;
-        }
-        
+        Graph newGraph = constructNewGraph(g, _times);
         DFSLoop(newGraph);
         
-        sort(begin(leaders), end(leaders));
-        int el = leaders[1];
+        sort(begin(_leaders), end(_leaders));
+        std::vector<SCC> SCCs;
+        int el = _leaders[1];
         int elCnt = 1;
-        for (int i = 2; i <= leaders.size(); i++)
+        for (int i = 2; i < _leaders.size(); i++)
         {
-            if (leaders[i] == el)
+            if (_leaders[i] == el)
                 elCnt++;
             else
             {
-                std::cout << "Leader " << el << " has " << elCnt << " nodes." << std::endl;
-                el = leaders[i];
+                SCC scc;
+                scc.leader = el;
+                scc.numNodes = elCnt;
+                SCCs.push_back(scc);
+                
+                el = _leaders[i];
                 elCnt = 1;
             }
         }
-
+        // last SCC
+        SCC scc;
+        scc.leader = el;
+        scc.numNodes = elCnt;
+        SCCs.push_back(scc);
         
+        // there are 4 SCCs in the given graph
+        assert(SCCs.size() == 4);
+        for (SCC scc : SCCs)
+        {
+            cout << "SCC with leader " << scc.leader << " has " << scc.numNodes << " nodes." << endl;
+        }
     }
     
-    int SCC(const string& fileName)
+    int computeSCC(const string& fileName)
     {
+        cout << "***** ASSIGNMENT4 MAIN TEST CASE *****" << endl;
         // load from file
         Graph G, Grev;
         ifstream file(fileName, ios::in);
@@ -239,7 +292,6 @@ namespace assignment4 {
             G[i] = std::vector<int>();
             Grev[i] = std::vector<int>();
         }
-        
         
         cout << "Reading file..." << endl;
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
@@ -264,61 +316,58 @@ namespace assignment4 {
         << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         << "ms.\n";
         
-        // initialize global var
-        seen = seenList(875714 + 1, 0); // initialize with zeros
-        times = timesList(875714 + 1, 0); // initialize with zeros
-        leaders = leadersList(875714 + 1, 0); // init with zeros
+        // initialize global vars
+        _seen       = seenList(G.size() + 1, 0);
+        _times      = timesList(G.size() + 1, 0);
+        _leaders    = leadersList(G.size() + 1, 0);
  
         DFSLoop(Grev);
         
-        Graph newGraph;
-        for (int i = 1; i<= times.size(); i++)
-        {
-            // if the vertex doesn't have outgoing edges
-            if (G[i].size() == 0)
-            {
-                newGraph[times[i]] = std::vector<int>();
-                continue;
-            }
-            
-            for (int neighbor : G[i])
-            {
-                newGraph[times[i]].push_back(times[neighbor]);
-            }
-            
-        }
-        
+        Graph newGraph = constructNewGraph(G, _times);
         DFSLoop(newGraph);
         
-        sort(leaders.begin(), leaders.end());
-        int el = leaders[1];
+        sort(_leaders.begin(), _leaders.end());
+        std::vector<SCC> SCCs;
+        int el = _leaders[1];
         int elCnt = 1;
-        std::vector<int> totalNodes;
-        ofstream f("out.txt");
-        for (int i = 2; i <= leaders.size(); i++)
+        for (int i = 2; i < _leaders.size(); i++)
         {
-            if (leaders[i] == el)
+            if (_leaders[i] == el)
                 elCnt++;
             else
             {
-                totalNodes.push_back(elCnt);
-           //     f << "Leader " << el << " has " << elCnt << endl;
-               // std::cout << "Leader " << el << " has " << elCnt << " nodes." << std::endl;
-                el = leaders[i];
+                SCC scc;
+                scc.leader = el;
+                scc.numNodes = elCnt;
+                SCCs.push_back(scc);
+                
+                el = _leaders[i];
                 elCnt = 1;
             }
         }
-
-        sort(totalNodes.begin(), totalNodes.end());
+        // last SCC
+        SCC scc;
+        scc.leader = el;
+        scc.numNodes = elCnt;
+        SCCs.push_back(scc);
         
-        for (int el : totalNodes)
-            f << el << endl;
-
-        f.close();
+        cout << " Total number of SCCs is: " << SCCs.size() << endl << "Top 5 are: " << endl;
+        
+        // Let's just sort them in descending order by number of components
+        sort(SCCs.begin(), SCCs.end(), compareByNumSCCs);
+        
+        for (int i = 0; i < 5; i++)
+        {
+            cout << "SCC with leader " << SCCs[i].leader << " has " << SCCs[i].numNodes << " nodes." << endl;
+        }
+        
+        // Correct result is: 434821,968,459,313,211
+        assert(SCCs[0].numNodes == 434821);
+        assert(SCCs[1].numNodes == 968);
+        assert(SCCs[2].numNodes == 459);
+        assert(SCCs[3].numNodes == 313);
+        assert(SCCs[4].numNodes == 211);
+               
         return 0;
     }
-
-   
-  
-
 } // namespace
