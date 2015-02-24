@@ -15,6 +15,7 @@
 #include "assignment2.hpp"
 #include "assignment3.hpp"
 #include "assignment4.hpp"
+#include "assignment5.hpp"
 
 
 int main(int argc, const char * argv[]) {
@@ -103,11 +104,19 @@ int main(int argc, const char * argv[]) {
     assignment4::testCase1();
     assignment4::testCase2();
     
+    /**** Takes too much time... Enable when needed ****
+    *
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     assignment4::computeSCC("SCC.txt");
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     std::cout << "Total time assignment4 main case took to run: "
     << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
     << "ms.\n";
+    *
+    ****/
+    
+    /*** Assignment 5 test cases ***/
+    assignment5::loadGraphAndInit("dijkstraData.txt");
+    assignment5::computeShortestPaths();
     
 }
