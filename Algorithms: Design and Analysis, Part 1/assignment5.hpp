@@ -45,8 +45,95 @@
  and their positions in the heap.
  ************************/
 
+#include <map>
+#include <vector>
+#include <fstream>
+#include <sstream>
+
 namespace assignment5 {
     
+    // Define Graph as a map with keys as vertex numbers and values
+    // as vector of vertices pairs: (connected_to_node, weight_of_edge)
+    typedef std::map<int, std::vector<std::pair<int,int>>> Graph;
+
+    Graph               _G;
+    std::vector<int>    _shortest_paths;
+    std::vector<int>    _processed_so_far;
     
+    void loadGraphAndInit(const string& fileName)
+    {
+        // load from file
+        ifstream file(fileName, ios::in);
+        
+        if (file.is_open())
+        {
+            std::string rawInput;
+            int vertex;
+            while (getline(file, rawInput))
+            {
+                std::istringstream is(rawInput);
+                
+                is >> vertex;
+                // read the pairs of dest, weight
+                int dest, weight;
+                char comma;
+                while (is >> dest >> comma >> weight)
+                {
+                    _G[vertex].push_back(make_pair(dest, weight));
+                }
+            }
+            file.close();
+        }
+        
+        // init shortest paths array
+        _shortest_paths = std::vector<int>(_G.size() + 1,1000000); // we start with vertex 1
+        _shortest_paths[1] = 0; // path to itself is 0
+        
+        // init processed_so_far array
+        _processed_so_far.push_back(1); // first vertex is in X initially
+        
+    }
+    
+    void computeShortestPaths()
+    {
+        if (_G.size() == 0)
+            return;
+        
+        while (_processed_so_far.size() != _G.size())
+        {
+            // for each edge (u, v) where u in X and v not in X
+            std::pair<int,int> min_pair;
+            int local_min = -1;
+            for (int vertex : _processed_so_far)
+            {
+                for (auto edge : _G[vertex])
+                {
+                    // target vertex (v) is not in X
+                    if (std::find(_processed_so_far.begin(), _processed_so_far.end(), edge.first) == _processed_so_far.end())
+                    {
+                        if (local_min == -1 || _shortest_paths[vertex] + edge.second < local_min)
+                        {
+                            min_pair = edge;
+                            local_min = _shortest_paths[vertex] + edge.second;
+                        }
+                    }
+                }
+            }
+            _processed_so_far.push_back(min_pair.first);
+            _shortest_paths[min_pair.first] = local_min;
+        }
+        
+        // reporting shortest paths for: 7,37,59,82,99,115,133,165,188,197
+        cout << _shortest_paths[7] << endl;
+        cout << _shortest_paths[37] << endl;
+        cout << _shortest_paths[59] << endl;
+        cout << _shortest_paths[82] << endl;
+        cout << _shortest_paths[99] << endl;
+        cout << _shortest_paths[115] << endl;
+        cout << _shortest_paths[133] << endl;
+        cout << _shortest_paths[165] << endl;
+        cout << _shortest_paths[188] << endl;
+        cout << _shortest_paths[197] << endl;
+    }
     
 }   // namespace
