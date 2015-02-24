@@ -14,3 +14,4 @@ range-for loops and many others... will see how it goes tho)
 
 4) Strongly Connected Components computation algorithm
 
+5) Dijkstra's shortest-path algorithm
