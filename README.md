@@ -15,3 +15,7 @@ range-for loops and many others... will see how it goes tho)
 4) Strongly Connected Components computation algorithm
 
 5) Dijkstra's shortest-path algorithm
+
+6.1) 2-SUM Problem
+
+6.2) Median Maintenance
