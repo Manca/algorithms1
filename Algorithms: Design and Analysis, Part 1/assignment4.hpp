@@ -142,7 +142,6 @@ namespace assignment4 {
     
     void testCase1()
     {
-        cout << "***** ASSIGNMENT4 TEST CASE 1 *****" << endl;
         Graph g;
         g[1] = {4};
         g[2] = {8};
@@ -218,7 +217,6 @@ namespace assignment4 {
     
     void testCase2()
     {
-        cout << "***** ASSIGNMENT4 TEST CASE 2 *****" << endl;
         Graph g;
         g[1] = {2};
         g[2] = {3, 5, 6};
