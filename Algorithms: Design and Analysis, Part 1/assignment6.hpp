@@ -43,18 +43,21 @@
 #include <list>
 #include <unordered_map>
 #include <unordered_set>
+#include "lib/Heap.hpp"
 
 namespace assignment6
 {
-    typedef std::unordered_map<long long, std::list<long long>> hashTable;
-    typedef std::unordered_set<int> seenSums;
-    
-    hashTable _hash;
-    seenSums  _sums;
-    
-    
+
+    // Problem 1
     int computeTargetSums(const string& fileName)
     {
+        // some defs and inits
+        typedef std::unordered_map<long long, std::list<long long>> hashTable;
+        typedef std::unordered_set<int> seenSums;
+        
+        hashTable _hash;
+        seenSums  _sums;
+        
         ifstream file(fileName, ios::in);
         
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
@@ -94,6 +97,63 @@ namespace assignment6
         std::cout << "Done. Time took to find all the sums: "
         << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
         
+        assert(_sums.size() == 427);
+        
         return _sums.size();
     }
-}
+    
+    // Problem 2
+    int computeSumOfMedians(const string& fileName)
+    {
+        std::ifstream file(fileName, ios::in);
+        DataStructures::Heap heapHigh(true), heapLow(false);
+        
+        std::vector<int> medians;
+    
+        if (file.is_open())
+        {
+            int num;
+            while (file >> num)
+            {
+                if (heapLow.size() == 0)
+                {
+                    heapLow.insert(num);
+                    medians.push_back(num);
+                    continue;
+                }
+                
+                // insert in appropriate heap
+                if (num > heapLow[0])
+                    heapHigh.insert(num);
+                else
+                    heapLow.insert(num);
+                
+                // balance the heaps
+                if (heapLow.size() - heapHigh.size() > 1)
+                    heapHigh.insert(heapLow.extractMax());
+                else if (heapHigh.size() - heapLow.size() > 1)
+                    heapLow.insert(heapHigh.extractMin());
+                
+                // extract the median
+                if (heapLow.size() >= heapHigh.size())
+                    medians.push_back(heapLow[0]);
+                else if (heapHigh.size() > heapLow.size())
+                    medians.push_back(heapHigh[0]);
+                
+            }
+            
+            int totalSum = 0;
+            for (auto m : medians)
+            {
+                totalSum += m;
+            }
+            
+            assert(totalSum % 10000 == 1213);
+            
+            return totalSum;
+        }
+        
+        return -1;
+    }
+    
+} // namespace
