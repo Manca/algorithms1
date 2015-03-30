@@ -18,11 +18,11 @@
 #include "assignment5.hpp"
 #include "assignment6.hpp"
 
-
 int main(int argc, const char * argv[]) {
 
     /*** Assignment 1 test cases ***/
     // TEST CASE 1:
+    cout << "*** Assignment 1 - Test Case 1 ***" << endl;
     vector<int> vec{4, 5, 6, 1, 3};
     
     long long inversions = assignment1::Count(vec);
@@ -31,6 +31,7 @@ int main(int argc, const char * argv[]) {
     
     // TEST CASE 2:
     // load file
+    cout << "*** Assignment 1 - Test Case 2 ***" << endl;
     ifstream inputFile("IntegerArray.txt", ios::in);
     vector<int> fileNumbers;
 
@@ -55,6 +56,7 @@ int main(int argc, const char * argv[]) {
     
     /*** Assignment 2 test cases ***/
     // TEST CASE 1:
+    cout << endl << "*** Assignment 2 - Test Case 1 ***" << endl;
     ifstream as2File("QuickSort.txt", ios::in);
     vector<int> as2Input;
     
@@ -91,6 +93,7 @@ int main(int argc, const char * argv[]) {
     }
     
     /*** Assignment 3 test cases ***/
+    cout << endl << "*** Assignment 3 - Test Case 1 ***" << endl;
     assignment3::Graph graph("kargerMinCut.txt");
     for (int i = 0; i < 10; i++)
     {
@@ -102,9 +105,12 @@ int main(int argc, const char * argv[]) {
     //assert(graph.mincut() == 17);
     
     /*** Assignment 4 test cases ***/
+    cout << endl << "*** Assignment 4 - Test Case 1 ***" << endl;
     assignment4::testCase1();
+    cout << "*** Assignment 4 - Test Case 2 ***" << endl;
     assignment4::testCase2();
     
+    cout << "*** Assignment 4 - Main Test Case (disabled) ***" << endl;
     /**** Takes too much time... Enable when needed ****
     *
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
@@ -117,27 +123,19 @@ int main(int argc, const char * argv[]) {
     ****/
     
     /*** Assignment 5 test cases ***/
+    cout << endl << "*** Assignment 5 - Test Case 1 ***" << endl;
     assignment5::loadGraphAndInit("dijkstraData.txt");
     assignment5::computeShortestPaths();
-    /*
-    assignment5::Heap h;
-    h.insert(4);
-    h.insert(12);
-    h.insert(3);
-    h.insert(8);
-    h.insert(9);
-    h.insert(10);
-    h.insert(3);
-    h.insert(5);
-    h.insert(7);
-    h.insert(2);
-    
-    h.printHeap();
-    h.printSorted();
-    */
     
     /*** Assignment 6 test cases ***/
+    // 6.1) 2-SUM Problem
+    cout << endl << "*** Assignment 6 - Problem 1 ***" << endl;
     long long sums = assignment6::computeTargetSums("algo1-programming_prob-2sum.txt");
     cout << "Number of sums is: " << sums << endl;
+    
+    // 6.2) Median Maintenance
+    cout << endl << "*** Assignment 6 - Problem 2 ***" << endl;
+    int sumOfMedians = assignment6::computeSumOfMedians("Median.txt") % 10000;
+    std::cout << "The sum of medians mod 10000 is: " << sumOfMedians << std::endl;
     
 }
