@@ -130,9 +130,9 @@ namespace assignment6
                 
                 // balance the heaps
                 if (heapLow.size() - heapHigh.size() > 1)
-                    heapHigh.insert(heapLow.extractMax());
+                    heapHigh.insert(heapLow.extractMinMax());   // from heapLow we extract max
                 else if (heapHigh.size() - heapLow.size() > 1)
-                    heapLow.insert(heapHigh.extractMin());
+                    heapLow.insert(heapHigh.extractMinMax());   // from heapHigh we extract min
                 
                 // extract the median
                 if (heapLow.size() >= heapHigh.size())
