@@ -124,16 +124,17 @@ namespace assignment5 {
         }
         
         // reporting shortest paths for: 7,37,59,82,99,115,133,165,188,197
-        cout << _shortest_paths[7] << endl;
-        cout << _shortest_paths[37] << endl;
-        cout << _shortest_paths[59] << endl;
-        cout << _shortest_paths[82] << endl;
-        cout << _shortest_paths[99] << endl;
-        cout << _shortest_paths[115] << endl;
-        cout << _shortest_paths[133] << endl;
-        cout << _shortest_paths[165] << endl;
-        cout << _shortest_paths[188] << endl;
-        cout << _shortest_paths[197] << endl;
+        cout << "Dijkstra's algorithm computed shortest paths to nodes 7,37,59,82,99,115,133,165,188,197: " << endl;
+        cout << _shortest_paths[7] << ", ";
+        cout << _shortest_paths[37] << ", ";
+        cout << _shortest_paths[59] << ", ";
+        cout << _shortest_paths[82] << ", ";
+        cout << _shortest_paths[99] << ", ";
+        cout << _shortest_paths[115] << ", ";
+        cout << _shortest_paths[133] << ", ";
+        cout << _shortest_paths[165] << ", ";
+        cout << _shortest_paths[188] << ", ";
+        cout << _shortest_paths[197] << ", respectively." << endl;
     }
     
 }   // namespace
