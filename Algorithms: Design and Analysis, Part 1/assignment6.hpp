@@ -106,7 +106,8 @@ namespace assignment6
     int computeSumOfMedians(const string& fileName)
     {
         std::ifstream file(fileName, ios::in);
-        DataStructures::Heap heapHigh(true), heapLow(false);
+        DataStructures::Heap heapHigh(true);    // Min-Heap - will hold the smallest element of the larger half
+        DataStructures::Heap heapLow(false);    // Max-Heap - will hold the largest element of the smaller half
         
         std::vector<int> medians;
     
