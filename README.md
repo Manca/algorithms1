@@ -5,6 +5,8 @@ This repo contains my solutions to the problems posted in the course. Feel free 
 They are coded in C++ and C++11 is used whereever it seemed natural (auto iterator type deductions, maybe some lambads,
 range-for loops and many others... will see how it goes tho)
 
+[![Build Status](https://travis-ci.org/Manca/algorithms1.svg?branch=master)](https://travis-ci.org/Manca/algorithms1)
+
 ## Problems
 1) Count number of inversions in an array. Running time O(nlogn)
 
