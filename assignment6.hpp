@@ -53,7 +53,7 @@ namespace assignment6
     {
         // some defs and inits
         typedef std::unordered_map<long long, std::list<long long>> hashTable;
-        typedef std::unordered_set<int> seenSums;
+        typedef std::unordered_set<long long> seenSums;
         
         hashTable _hash;
         seenSums  _sums;

@@ -23,7 +23,7 @@ int main(int argc, const char * argv[]) {
     /*** Assignment 1 test cases ***/
     // TEST CASE 1:
     cout << "*** Assignment 1 - Test Case 1 ***" << endl;
-    vector<int> vec{4, 5, 6, 1, 3};
+    std::vector<int> vec{4, 5, 6, 1, 3};
     
     long long inversions = assignment1::Count(vec);
     
@@ -32,8 +32,8 @@ int main(int argc, const char * argv[]) {
     // TEST CASE 2:
     // load file
     cout << "*** Assignment 1 - Test Case 2 ***" << endl;
-    ifstream inputFile("data/IntegerArray.txt", ios::in);
-    vector<int> fileNumbers;
+    std::ifstream inputFile("data/IntegerArray.txt", ios::in);
+    std::vector<int> fileNumbers;
 
     // fill it in with numbers from the file
     if (inputFile.is_open())

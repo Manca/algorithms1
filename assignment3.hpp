@@ -43,6 +43,7 @@
 #include <fstream>
 #include <sstream>
 #include <random>
+#include <iterator>
 
 namespace assignment3 {
 
@@ -135,7 +136,7 @@ namespace assignment3 {
                 n--;
                 
                 // finally, let's clean all self loops in a merged node
-                int i = 0;
+                size_t i = 0;
                 while (i < contractedList[u].size())
                     if (contractedList[u].at(i) == u)
                         contractedList[u].erase(begin(contractedList[u]) + i);

@@ -23,26 +23,25 @@
 
 #include <iostream>
 #include <vector>
-using namespace std;
 
 namespace assignment1
 {
     // counting inversions
-    long long CountSplitInv(vector<int> &input, const vector<int>& left, const vector<int>& right)
+    long long CountSplitInv(std::vector<int> &input, const std::vector<int>& left, const std::vector<int>& right)
     {
-        vector<int> result;
+        std::vector<int> result;
         long long inversions = 0;
         
-        int i = 0, j = 0;
+        size_t i = 0, j = 0;
         
-        for (int k = 0; k < (left.size() + right.size()); k++)
+        for (size_t k = 0; k < (left.size() + right.size()); k++)
         {
-            if (i < left.size() && left[i] < right[j])
+            if ( (i < left.size()) && (j < right.size()) && (left[i] < right[j]))
             {
                 result.push_back(left[i]);
                 i++;
             }
-            else if (j < right.size() && right[j] <= left[i])
+            else if ( (j < right.size()) && (i <left.size()) && (right[j] <= left[i]))
             {
                 result.push_back(right[j]);
                 j++;
@@ -71,7 +70,7 @@ namespace assignment1
     }
 
     // entry point to the algorithm
-    long long Count(vector<int> &input)
+    long long Count(std::vector<int> &input)
     {
         if (input.size() == 1)
             return 0;
@@ -79,8 +78,8 @@ namespace assignment1
         {
             // prepare two subarrays
             auto mid = input.begin() + (input.size()/2);
-            vector<int> left(input.begin(), mid);
-            vector<int> right(mid, input.end());
+            std::vector<int> left(input.begin(), mid);
+            std::vector<int> right(mid, input.end());
             
             // find inversions in each half of the array
             long long x = Count(left);

@@ -98,7 +98,7 @@ namespace DataStructures {
                 
                 if (_minHeap)
                 {
-                    int minChild = (_heap[leftChildIdx] < _heap[rightChildIdx]) ? leftChildIdx : rightChildIdx;
+                    size_t minChild = (_heap[leftChildIdx] < _heap[rightChildIdx]) ? leftChildIdx : rightChildIdx;
                     while (minChild < _heap.size() && _heap[rootIndex] > _heap[minChild])
                     {
                         // exchange
@@ -116,7 +116,7 @@ namespace DataStructures {
                 }
                 else
                 {
-                    int maxChild = (_heap[leftChildIdx] > _heap[rightChildIdx]) ? leftChildIdx : rightChildIdx;
+                    size_t maxChild = (_heap[leftChildIdx] > _heap[rightChildIdx]) ? leftChildIdx : rightChildIdx;
                     while (maxChild < _heap.size() && _heap[rootIndex] < _heap[maxChild])
                     {
                         // exchange
@@ -139,7 +139,7 @@ namespace DataStructures {
         {
             if (_heap.size() > 0)
             {
-                return floor(x/2)-(x+1)%2;
+                return (int)(floor(x/2)-(x+1)%2);
             }
             else
                 return x;
@@ -147,7 +147,7 @@ namespace DataStructures {
         
         int leftChild(int x)
         {
-            int left = x*2 + 1;
+            size_t left = x*2 + 1;
             if (left < _heap.size())
                 return left;
             else
@@ -156,7 +156,7 @@ namespace DataStructures {
         
         int rightChild(int x)
         {
-            int right = x*2 + 2;
+            size_t right = x*2 + 2;
             if (right < _heap.size())
                 return right;
             else

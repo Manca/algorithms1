@@ -45,6 +45,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 namespace assignment4 {
     
@@ -112,7 +113,7 @@ namespace assignment4 {
         // assuming vertex labels start from 1 to n.
         assert(fTimes.size() == originalGraph.size()+1);
         
-        for (int i = 1; i < fTimes.size(); i++)
+        for (size_t i = 1; i < fTimes.size(); i++)
         {
             // if the vertex in original graph doesn't have outgoing edges
             if (originalGraph[i].size() == 0)
@@ -185,7 +186,7 @@ namespace assignment4 {
         
         int el = _leaders[1];
         int elCnt = 1;
-        for (int i = 2; i < _leaders.size(); i++)
+        for (size_t i = 2; i < _leaders.size(); i++)
         {
             if (_leaders[i] == el)
                 elCnt++;
@@ -207,10 +208,10 @@ namespace assignment4 {
         SCCs.push_back(scc);
         
         // there are 3 SCCs in the given graph
-        assert(SCCs.size() == 3);
-        for (SCC scc : SCCs)
+        assert((int)SCCs.size() == 3);
+        for (SCC sccc : SCCs)
         {
-            cout << "SCC with leader " << scc.leader << " has " << scc.numNodes << " nodes." << endl;
+            cout << "SCC with leader " << sccc.leader << " has " << sccc.numNodes << " nodes." << endl;
         }
         
     }
@@ -250,7 +251,7 @@ namespace assignment4 {
         std::vector<SCC> SCCs;
         int el = _leaders[1];
         int elCnt = 1;
-        for (int i = 2; i < _leaders.size(); i++)
+        for (size_t i = 2; i < _leaders.size(); i++)
         {
             if (_leaders[i] == el)
                 elCnt++;
@@ -273,9 +274,9 @@ namespace assignment4 {
         
         // there are 4 SCCs in the given graph
         assert(SCCs.size() == 4);
-        for (SCC scc : SCCs)
+        for (SCC sccc : SCCs)
         {
-            cout << "SCC with leader " << scc.leader << " has " << scc.numNodes << " nodes." << endl;
+            cout << "SCC with leader " << sccc.leader << " has " << sccc.numNodes << " nodes." << endl;
         }
     }
     
@@ -328,7 +329,7 @@ namespace assignment4 {
         std::vector<SCC> SCCs;
         int el = _leaders[1];
         int elCnt = 1;
-        for (int i = 2; i < _leaders.size(); i++)
+        for (size_t i = 2; i < _leaders.size(); i++)
         {
             if (_leaders[i] == el)
                 elCnt++;
